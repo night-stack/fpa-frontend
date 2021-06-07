@@ -26,9 +26,31 @@ export default {
   components: {
     searchValue: '',
   },
+  mounted() {
+    this.getData()
+  },
+  data() {
+    return{
+      products: [],
+    }
+  },
   methods: {
     searchProduct(e){
 
+    },
+    async getData() {
+      await this.firebase.database().ref(`products`)
+      .on('value', (snapshot) => {
+        const object = snapshot.val();
+
+        if (object) {
+          const list = Object.keys(object).map((key) => ({
+            ...object[key],
+            cid: key,
+          }));
+          this.products = list
+        }
+      });
     },
   },
 }
