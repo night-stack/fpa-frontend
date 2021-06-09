@@ -1,21 +1,23 @@
 <template lang='pug'>
   v-app(dark)
     v-app-bar(:clipped-left='clipped' fixed app)
-      nuxt-link(to='/', v-if='username')
+      nuxt-link(to='/', v-if='loggedIn')
         v-toolbar-title(v-text='title')
       v-toolbar-title(v-text='title', v-else)
       v-spacer
 
-      template(v-if='username')
+      template(v-if='loggedIn')
         nuxt-link.app-bar-link(v-for='link in links' :key='link.to' :to='link.to' :class='link.to === $route.path ? "active" : ""')
           div {{link.title}}
+        div.app-bar-link(@click="logout") {{Logout}}
       template(v-else)
         nuxt-link.app-bar-link(v-for='link in guestLinks' :key='link.to' :to='link.to' :class='link.to === $route.path ? "active" : ""')
           div {{link.title}}
-      template(v-if='isAdmin && username')
+      template(v-if='username === admin')
         nuxt-link.app-bar-link(v-for='link in adminLinks' :key='link.to' :to='link.to' :class='$route.path.indexOf(link.to) !== -1 ? "active" : ""')
           div {{link.title}}
-      p.ml-5(v-if='username') {{username}}
+        div.app-bar-link(@click="logout") {{Logout}}
+      p.ml-5(v-if='loggedIn') {{username}}
     v-main
       v-container
         nuxt
@@ -35,12 +37,12 @@ import {mapGetters} from 'vuex';
 
 export default {
   name: 'IndexPage',
-  computed: {
-    ...mapGetters({
-      isAdmin: 'getAdminStatus',
-      username: 'getUsername',
-    }),
-  },
+  // computed: {
+  //   ...mapGetters({
+  //     isAdmin: 'getAdminStatus',
+  //     username: 'getUsername',
+  //   }),
+  // },
   data() {
     return {
       clipped: false,
@@ -96,7 +98,39 @@ export default {
       right: true,
       rightDrawer: false,
       title: 'MAOU',
+      loggedIn: false,
+      username: '',
     }
+  },
+  methods: {
+    setupFirebase() {
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          // User is signed in.
+          console.log('signed in')
+          // firebase
+          //   .auth()
+          //   .currentUser.getIdToken(true)
+          //   .then(token => Cookies.set('access_token', token))
+          this.loggedIn = true
+        } else {
+          // Cookies.remove('access_token')
+          // if (Cookies.set('access_token', 'blah')) {
+          // }
+          // No user is signed in.
+          this.loggedIn = false
+          console.log('signed out', this.loggedIn)
+        }
+      })
+    },
+    logout() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          this.$router.replace({ name: 'login' })
+        })
+    },
   },
 }
 </script>

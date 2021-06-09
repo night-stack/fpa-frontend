@@ -40,6 +40,18 @@ export default {
         //   .catch(() => this.$toast.error('Gagal login'))
       }
     },
+    loginFirebase(){
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(this.formData.email, this.formData.password)
+        .then(data => {
+          console.log(data)
+          this.$router.replace({ name: 'data-products' })
+        })
+        .catch(error => {
+          this.error = error
+        })
+    },
   },
 }
 </script>
