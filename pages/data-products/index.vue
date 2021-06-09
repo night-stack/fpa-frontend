@@ -43,6 +43,7 @@ export default {
       this.$toast.error('Kamu tidak memiliki akses halaman ini');
       this.$router.push('/')
     }
+    this.getData()
   },
   data(){
 
@@ -94,6 +95,20 @@ export default {
     },
     handleMap(e){
       
+    },
+    async getData(){
+      await firebase.database().ref('products')
+      .once('value', (snapshot) => {
+        const object = snapshot.val();
+
+        if (object) {
+          const list = Object.keys(object).map((key) => ({
+            ...object[key],
+            cid: key,
+          }));
+          this.items = list
+        }
+      });
     },
   },
 };

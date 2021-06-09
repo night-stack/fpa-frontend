@@ -13,13 +13,17 @@
 </template>
 
 <script>
+import firebase from '../plugins/firebase'
+import { DateTimeHelper } from '../helpers'
+
 export default {
   auth: false,
-  name: 'loginPage',
+  name: 'registerPage',
   data(){
     return{
       valid: false,
       formData: {
+        name: '',
         email: '',
         password: '',
       },
@@ -33,10 +37,28 @@ export default {
       this.$refs.form.validate();
       await this.$nextTick();
       if(this.valid){
+        console.log(this.formData)
         //proceed register
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(this.formData.email, this.formData.password)
+        .then((authUser) => {
+          // Create a user in your Firebase realtime database
 
-
-        this.$toast.success('Berhasil terdaftar. Silahkan login')
+          return firebase
+            .database()
+            .ref(`users/${authUser.user.uid}`)
+            .set({
+              createdAt: DateTimeHelper.getCurrentTimeMs(),
+              name: this.formData.name,
+              email: this.formData.email,
+            })
+        }).then(() => {
+          this.$toast.success('Berhasil terdaftar. Silahkan login')
+          this.$router.push('/login')
+        }).catch((error) => {
+          this.$toast.error(error);
+        })
       }
     },
   },

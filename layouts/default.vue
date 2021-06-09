@@ -1,23 +1,23 @@
 <template lang='pug'>
   v-app(dark)
     v-app-bar(:clipped-left='clipped' fixed app)
-      nuxt-link(to='/', v-if='loggedIn')
+      nuxt-link(to='/', v-if='username')
         v-toolbar-title(v-text='title')
       v-toolbar-title(v-text='title', v-else)
       v-spacer
 
-      template(v-if='loggedIn')
+      template(v-if='!isAdmin && username')
         nuxt-link.app-bar-link(v-for='link in links' :key='link.to' :to='link.to' :class='link.to === $route.path ? "active" : ""')
           div {{link.title}}
-        div.app-bar-link(@click="logout") {{Logout}}
-      template(v-else)
+        div.app-bar-link(v-if='username', @click="logout") LOGOUT
+      template(v-if='!username')
         nuxt-link.app-bar-link(v-for='link in guestLinks' :key='link.to' :to='link.to' :class='link.to === $route.path ? "active" : ""')
           div {{link.title}}
-      template(v-if='username === admin')
+      template(v-if='isAdmin')
         nuxt-link.app-bar-link(v-for='link in adminLinks' :key='link.to' :to='link.to' :class='$route.path.indexOf(link.to) !== -1 ? "active" : ""')
           div {{link.title}}
-        div.app-bar-link(@click="logout") {{Logout}}
-      p.ml-5(v-if='loggedIn') {{username}}
+        div.app-bar-link(@click="logout") LOGOUT
+      p.ml-5(v-if='username') {{username}}
     v-main
       v-container
         nuxt
@@ -33,16 +33,17 @@
 </template>
 
 <script>
+import firebase from '../plugins/firebase'
 import {mapGetters} from 'vuex';
 
 export default {
   name: 'IndexPage',
-  // computed: {
-  //   ...mapGetters({
-  //     isAdmin: 'getAdminStatus',
-  //     username: 'getUsername',
-  //   }),
-  // },
+  computed: {
+    ...mapGetters({
+      isAdmin: 'getAdminStatus',
+      username: 'getUsername',
+    }),
+  },
   data() {
     return {
       clipped: false,
@@ -80,6 +81,22 @@ export default {
       ],
       guestLinks: [
         {
+          to: '/',
+          title: 'HOME',
+        },
+        {
+          to: '/products',
+          title: 'PRODUK',
+        },
+        {
+          to: '/about',
+          title: 'ABOUT US',
+        },
+        {
+          to: '/route',
+          title: 'ROUTE',
+        },
+        {
           to: '/login',
           title: 'Login',
         },
@@ -91,15 +108,13 @@ export default {
       adminLinks: [
         {
           to: '/data-products',
-          title: 'DATA PRODUK (ADMIN)',
+          title: 'DATA PRODUK',
         },
       ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
       title: 'MAOU',
-      loggedIn: false,
-      username: '',
     }
   },
   methods: {
@@ -128,6 +143,7 @@ export default {
         .auth()
         .signOut()
         .then(() => {
+          this.$store.dispatch('logout');
           this.$router.replace({ name: 'login' })
         })
     },
@@ -142,6 +158,10 @@ a{
 }
 .app-bar-link{
   margin-right: 10px;
+
+}
+div.app-bar-link{
+  cursor: pointer;
 }
 .app-bar-link.active{
   color: orange;

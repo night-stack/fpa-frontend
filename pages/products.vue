@@ -1,25 +1,26 @@
 <template lang="pug">
   v-layout(column)
     v-text-field.mt-5(v-model='searchValue', @change='searchProduct', label='Cari Nama Produk/Kode Produk', prepend-inner-icon='mdi-magnify', filled, dense)
-    v-card.card-light.mx-auto.mb-3(min-width='1000px', tile, v-for='i in 4')
+    v-card.card-light.mx-auto.mb-3(min-width='1000px', tile, v-for='item in products')
       v-list-item-content
         v-row.justify-space-between.px-6.py-6(row, nowrap)
           v-col.card-image.flex-grow-0(style='flex-basis: 300px' col='3')
-            img.mx-3(:src='`/product-${ i }.jpg`', alt='product', height='200')
+            img.mx-3(:src='item.image', alt='product', height='200')
           v-col.item-description-container(col='9')
-            h4.display-1 Blue Band 250 gram || Unilever
-            p #[b Rp 10.000 ]
+            h4.display-1 {{item.name}} || {{item.brand}}
+            p #[b Rp {{Intl.NumberFormat('id').format(item.price)}} ]
             .item-info
-              span Stock: 0
-              span &nbsp; Status: Kosong
-              span &nbsp; Lokasi: RAK A
+              span Stock: {{item.stock}}
+              span &nbsp; Status: {{item.status === 'available' ? 'Tersedia' : 'Kosong'}}
+              span &nbsp; Lokasi: RAK {{item.shelf}}
       .map-button
         v-icon(large, color="blue darken-2") mdi-map-marker
-        span.blue--text Lihat lokasi
+        span.blue--text(@click='goTo(item.shelf)') Lihat lokasi
     
 </template>
 
 <script>
+import firebase from '../plugins/firebase'
 
 export default {
   name: 'ProductsPage',
@@ -38,9 +39,9 @@ export default {
     searchProduct(e){
 
     },
-    async getData() {
-      await this.firebase.database().ref(`products`)
-      .on('value', (snapshot) => {
+    getData() {
+      firebase.database().ref('products')
+      .once('value', (snapshot) => {
         const object = snapshot.val();
 
         if (object) {
@@ -51,6 +52,10 @@ export default {
           this.products = list
         }
       });
+    },
+
+    goTo(rak){
+      this.$router.push({ path: '/map', query: { rak } })
     },
   },
 }

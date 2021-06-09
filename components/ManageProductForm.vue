@@ -85,7 +85,7 @@ export default {
       this.$refs.form.validate();
       await this.$nextTick();
       if(this.valid){
-
+        console.log(this.formData)
         this.$toast.success('Berhasil tersimpan.')
         this.$emit('input', false);
       }
