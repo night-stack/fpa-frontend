@@ -62,9 +62,9 @@ export default {
       items: [
         {
           kode_produk: 'BR00121',
-          nama: 'Blue Band',
+          name: 'Blue Band',
           brand: 'Unilever',
-          harga: '15000',
+          price: '15000',
           status: 'Ada',
           stock: 21,
         },
@@ -125,4 +125,7 @@ export default {
 </script>
 
 <style scoped>
+  td .text-start {
+    max-width: 15rem!important
+  }
 </style>

@@ -143,6 +143,7 @@ export default {
         .auth()
         .signOut()
         .then(() => {
+          localStorage.removeItem('user');
           this.$store.dispatch('logout');
           this.$router.push('/login')
         })

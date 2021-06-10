@@ -34,6 +34,13 @@ export default {
         .auth()
         .signInWithEmailAndPassword(this.formData.email, this.formData.password)
         .then(async data => {
+          const user = JSON.stringify({
+            uid: data.uid,
+            email: data.email,
+            createdAt: data.createdAt,
+            emailVerified: data.emailVerified,
+          })
+          localStorage.setItem('user', user);
           this.$store.dispatch('login', this.formData);
           await this.$nextTick();
           if (this.$store.getters['getUsername']){
