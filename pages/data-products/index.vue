@@ -1,6 +1,6 @@
 <template lang="pug">
 v-layout(column)
-  v-btn(@click='goToManageProduct').align-self-start 
+  v-btn(@click='goToAddProduct').align-self-start 
     v-icon mdi-plus
     | Tambah Produk
   v-text-field.mt-5(v-model='searchValue', @change='searchProduct', label='Cari Nama Produk/Kode Produk', prepend-inner-icon='mdi-magnify', filled, dense)
@@ -86,6 +86,9 @@ export default {
   methods: {
     goToManageProduct(item = {}){
       this.selectedProduct = item;
+      this.openManageForm = true;
+    },
+    goToAddProduct(){
       this.openManageForm = true;
     },
     goToDeleteForm(item){
