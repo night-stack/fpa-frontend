@@ -1,6 +1,6 @@
 <template lang="pug">
 v-layout(column)
-  v-btn(@click='goToManageProduct').align-self-start 
+  v-btn(@click='goToAddProduct').align-self-start 
     v-icon mdi-plus
     | Tambah Produk
   v-text-field.mt-5(v-model='searchValue', @change='searchProduct', label='Cari Nama Produk/Kode Produk', prepend-inner-icon='mdi-magnify', filled, dense)
@@ -39,10 +39,10 @@ export default {
     ManageProductForm,
   },
   mounted(){
-    if (!this.$store.getters['isAdmin']) {
-      this.$toast.error('Kamu tidak memiliki akses halaman ini');
-      this.$router.push('/')
-    }
+    // if (!this.$store.getters['isAdmin']) {
+    //   this.$toast.error('Kamu tidak memiliki akses halaman ini');
+    //   this.$router.push('/')
+    // }
   },
   data(){
 
@@ -78,6 +78,9 @@ export default {
   methods: {
     goToManageProduct(item = {}){
       this.selectedProduct = item;
+      this.openManageForm = true;
+    },
+    goToAddProduct(){
       this.openManageForm = true;
     },
     goToDeleteForm(item){
