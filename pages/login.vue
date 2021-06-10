@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import firebase from '../plugins/firebase'
 import {mapGetters} from 'vuex';
 
 export default {
@@ -29,16 +30,37 @@ export default {
       this.$refs.form.validate();
       await this.$nextTick();
       if(this.valid){
-        this.$store.dispatch('login', this.formData);
-        await this.$nextTick();
-        if (this.$store.getters['getUsername']){
-          this.$router.push('/');
-        }
-        else this.$toast.error('gagal login');
+        firebase
+          .auth()
+          .signInWithEmailAndPassword(this.formData.email, this.formData.password)
+          .then(async (data) => {
+            this.$store.dispatch('login', data);
+            await this.$nextTick();
+            if (this.$store.getters['getUsername']){
+              this.$router.push('/');
+            } else { 
+              this.$toast.error('gagal login');
+              this.$router.push('/')
+            }})
+          .catch(error => {
+            this.error = error
+          })
         // this.$auth.loginWith('local', { data: this.formData })
         //   .then(() => this.$toast.success('Logged In!'))
         //   .catch(() => this.$toast.error('Gagal login'))
       }
+    },
+    loginFirebase(){
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(this.formData.email, this.formData.password)
+        .then(data => {
+          console.log(data)
+          this.$router.replace({ name: 'data-products' })
+        })
+        .catch(error => {
+          this.error = error
+        })
     },
   },
 }

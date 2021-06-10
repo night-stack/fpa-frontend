@@ -6,15 +6,17 @@
       v-toolbar-title(v-text='title', v-else)
       v-spacer
 
-      template(v-if='username')
+      template(v-if='!isAdmin && username')
         nuxt-link.app-bar-link(v-for='link in links' :key='link.to' :to='link.to' :class='link.to === $route.path ? "active" : ""')
           div {{link.title}}
-      template(v-else)
+        div.app-bar-link(v-if='username', @click="logout") LOGOUT
+      template(v-if='!username')
         nuxt-link.app-bar-link(v-for='link in guestLinks' :key='link.to' :to='link.to' :class='link.to === $route.path ? "active" : ""')
           div {{link.title}}
-      template(v-if='isAdmin && username')
+      template(v-if='isAdmin')
         nuxt-link.app-bar-link(v-for='link in adminLinks' :key='link.to' :to='link.to' :class='$route.path.indexOf(link.to) !== -1 ? "active" : ""')
           div {{link.title}}
+        div.app-bar-link(@click="logout") LOGOUT
       p.ml-5(v-if='username') {{username}}
     v-main
       v-container
@@ -31,6 +33,7 @@
 </template>
 
 <script>
+import firebase from '../plugins/firebase'
 import {mapGetters} from 'vuex';
 
 export default {
@@ -78,6 +81,22 @@ export default {
       ],
       guestLinks: [
         {
+          to: '/',
+          title: 'HOME',
+        },
+        {
+          to: '/products',
+          title: 'PRODUK',
+        },
+        {
+          to: '/about',
+          title: 'ABOUT US',
+        },
+        {
+          to: '/route',
+          title: 'ROUTE',
+        },
+        {
           to: '/login',
           title: 'Login',
         },
@@ -89,7 +108,7 @@ export default {
       adminLinks: [
         {
           to: '/data-products',
-          title: 'DATA PRODUK (ADMIN)',
+          title: 'DATA PRODUK',
         },
       ],
       miniVariant: false,
@@ -97,6 +116,37 @@ export default {
       rightDrawer: false,
       title: 'MAOU',
     }
+  },
+  methods: {
+    setupFirebase() {
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          // User is signed in.
+          console.log('signed in')
+          // firebase
+          //   .auth()
+          //   .currentUser.getIdToken(true)
+          //   .then(token => Cookies.set('access_token', token))
+          this.loggedIn = true
+        } else {
+          // Cookies.remove('access_token')
+          // if (Cookies.set('access_token', 'blah')) {
+          // }
+          // No user is signed in.
+          this.loggedIn = false
+          console.log('signed out', this.loggedIn)
+        }
+      })
+    },
+    logout() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          this.$store.dispatch('logout');
+          this.$router.replace({ name: 'login' })
+        })
+    },
   },
 }
 </script>
@@ -108,6 +158,10 @@ a{
 }
 .app-bar-link{
   margin-right: 10px;
+
+}
+div.app-bar-link{
+  cursor: pointer;
 }
 .app-bar-link.active{
   color: orange;
