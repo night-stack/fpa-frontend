@@ -6,7 +6,12 @@ v-layout(column)
   v-text-field.mt-5(v-model='searchValue', @change='searchProduct', label='Cari Nama Produk/Kode Produk', prepend-inner-icon='mdi-magnify', filled, dense)
   v-data-table(:headers='headers', :items='items', hide-default-footer)
     v-progress-linear(slot='progress', color='primary', indeterminate)
-    template(v-slot:item.lokasi="{item}")
+    template(v-slot:item.image="{item}")
+      td
+        img.mx-3(:src='item.image', alt='product', height='100')
+    template(v-slot:item.price="{item}")
+      td Rp {{Intl.NumberFormat('id').format(item.price)}}
+    template(v-slot:item.shelf="{item}")
       td
         .map-button(@click='handleMap', style='cursor: pointer')
           v-icon(large, color="blue darken-2") mdi-map-marker
@@ -31,6 +36,7 @@ v-layout(column)
 
 
 <script>
+import firebase from '../../plugins/firebase'
 import ManageProductForm from '/components/ManageProductForm';
 
 export default {
@@ -39,7 +45,7 @@ export default {
     ManageProductForm,
   },
   mounted(){
-    if (!this.$store.getters['isAdmin']) {
+    if (!this.$store.getters['getAdminStatus']) {
       this.$toast.error('Kamu tidak memiliki akses halaman ini');
       this.$router.push('/')
     }
@@ -66,12 +72,13 @@ export default {
       searchValue: '',
       headers: [
         {text: 'Kode Produk', value: 'kode_produk'},
-        { text: 'Nama Produk', value: 'nama'},
+        {text: 'Gambar', value: 'image'},
+        {text: 'Nama Produk', value: 'name'},
         {text: 'Brand', value: 'brand'},
-        {text: 'Harga', value: 'harga'},
+        {text: 'Harga', value: 'price'},
         {text: 'Status', value: 'status'},
         {text: 'Stock', value: 'stock'},
-        {text: 'Lokasi', value: 'lokasi'},
+        {text: 'Lokasi', value: 'shelf'},
         {text: 'Edit', value: 'edit'},
       ].map(data => ({...data, sortable: false})),
     }

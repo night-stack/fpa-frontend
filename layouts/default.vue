@@ -138,13 +138,13 @@ export default {
         }
       })
     },
-    logout() {
-      firebase
+    async logout() {
+      await firebase
         .auth()
         .signOut()
         .then(() => {
           this.$store.dispatch('logout');
-          this.$router.replace({ name: 'login' })
+          this.$router.push('/login')
         })
     },
   },

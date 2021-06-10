@@ -42,6 +42,9 @@ export default {
       default: false,
     },
   },
+  mounted(){
+    this.getData()
+  },
   data(){
     return{
       statusItem: [
@@ -89,6 +92,21 @@ export default {
         this.$toast.success('Berhasil tersimpan.')
         this.$emit('input', false);
       }
+    },
+    async getData(){
+      await firebase.database().ref('products')
+      .once('value', (snapshot) => {
+        const object = snapshot.val();
+
+        if (object) {
+          const list = Object.keys(object).map((key) => ({
+            ...object[key],
+            cid: key,
+          }));
+          // this.formData.kode_produc = list[list.length]
+          console.log(list[list.length])
+        }
+      });
     },
   },
 }

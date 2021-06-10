@@ -10,12 +10,13 @@ const getters = {
 
 const actions = {
   fetchData({ commit, dispatch }, data) {},
-  login({ commit, dispatch }, { data, email }) {
-    if (data && email === 'admin@maou.com') {
-      commit('setUsername', data?.user?.email);
+  login({ commit, dispatch }, { email, password }) {
+    if (email === 'admin@maou.com' && password === '111111') {
+      commit('setUsername', email);
       commit('setAdminStatus', true);
-    } else {
-      commit('setUsername', data?.user?.email);
+    }
+    if (email !== 'admin@maou.com') {
+      commit('setUsername', email);
       commit('setAdminStatus', false);
     }
   },
