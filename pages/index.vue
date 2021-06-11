@@ -3,18 +3,19 @@ v-layout(column)
   img(src='/home-banner.jpg')
   v-text-field.mt-5(v-model='searchValue', @change='searchProduct', label='Cari Nama Produk/Kode Produk', prepend-inner-icon='mdi-magnify', filled, dense)
   v-btn.align-self-end.my-3.text-xs-right(@click='goToProducts', color='primary', depressed) Lihat Semua
-  vue-slick-carousel(cssEase='ease' :infinite='false', :draggable='true' lazyLoad='ondemand' :slidesToShow='3' :arrows='true' :dots='true')
-    v-card.text-center.card-light.mr-1(v-for='i in 6' :key='"product" + i')
-      img.mx-3(:src='`/product-${ ((i-1) % 4) + 1}.jpg`', height='200px' alt='product')
+  vue-slick-carousel(v-if='filteredItems.length > 0' cssEase='ease' :infinite='false', :draggable='true' lazyLoad='ondemand' :slidesToShow='3' :arrows='true' :dots='true')
+    v-card.text-center.card-light.mr-1(v-for='i in filteredItems' :key='i.id')
+      img.mx-3(:src='i.image', height='200px' alt='product')
       v-list-item-content.text-left.ml-3
         v-list-item-title.headline.mb-1
-          | Nama Product
-        p #[b Rp. 0 ]
+          | {{i.name}}
+        p #[b Rp {{Intl.NumberFormat('id').format(i.price)}} ]
   hr.mt-8
   h4.display-0.text-center Terima kasih atas kunjunganya
 </template>
 
 <script>
+import firebase from '../plugins/firebase'
 import VueSlickCarousel from 'vue-slick-carousel';
 import 'vue-slick-carousel/dist/vue-slick-carousel.css';
 import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css';
@@ -27,22 +28,44 @@ export default {
   components: {
     VueSlickCarousel,
   },
+  mounted() {
+    this.getData()
+  },
   data() {
     return {
       searchValue: '',
+      products: [],
     };
   },
   computed: {
     ...mapGetters({
       username: 'getUsername',
     }),
+    filteredItems: function(){
+      return this.products.filter((item) => {
+        return item.name.match(this.searchValue) || item.kode_produk.match(this.searchValue)
+      });
+    },
   },
   methods: {
-    searchProduct(){
-      
+    searchProduct(e){
+      this.searchValue = e
     },
     goToProducts(){
       this.$router.push('/products');
+    },
+    async getData() {
+      await firebase.database().ref('products').limitToFirst(9)
+      .once('value', (snapshot) => {
+        const object = snapshot.val();
+
+        if (object) {
+          const list = Object.keys(object).map((key) => ({
+            ...object[key],
+          }));
+          this.products = list.reverse()
+        }
+      });
     },
   },
 };

@@ -17,7 +17,6 @@
       v-col(cols='3')
         p 
           strong Produk dipilih: {{selectedProducts.length}}
-        small *minimal cari 2 produk
         br
         v-btn(@click='findProduct' color='primary') Cari
 </template>
@@ -37,7 +36,10 @@ export default {
   methods: {
     findProduct(){
       if (this.selectedProducts.length < 2){
-        this.$toast.error('Minimal 2 produk');
+        const lastShelf = this.selectedProducts[selectedProducts.length - 1]
+        this.selectedProducts.push(lastShelf)
+        
+        // this.$toast.error('Minimal 2 produk');
       }
       else{
         const params = qs.stringify({

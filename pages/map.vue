@@ -105,9 +105,6 @@
         p
             strong Jarak titik awal ke tujuan
         p 12 meter
-        p  
-            strong Jumlah stock produk yang dicari
-        p 12 unit
         p 
             strong Rute yang dilalui
         p X - A - B - C - D

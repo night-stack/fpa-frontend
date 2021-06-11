@@ -1,7 +1,7 @@
 <template lang="pug">
   v-layout(column)
     v-text-field.mt-5(v-model='searchValue', @change='searchProduct', label='Cari Nama Produk/Kode Produk', prepend-inner-icon='mdi-magnify', filled, dense)
-    v-card.card-light.mx-auto.mb-3(min-width='1000px', tile, v-for='item in products')
+    v-card.card-light.mx-auto.mb-3(min-width='1000px', max-width='1000px', tile, v-for='item in filteredItems')
       v-list-item-content
         v-row.justify-space-between.px-6.py-6(row, nowrap)
           v-col.card-image.flex-grow-0(style='flex-basis: 300px' col='3')
@@ -24,20 +24,28 @@ import firebase from '../plugins/firebase'
 
 export default {
   name: 'ProductsPage',
-  components: {
-    searchValue: '',
-  },
+  // components: {
+  //   searchValue: '',
+  // },
   mounted() {
     this.getData()
   },
   data() {
     return{
       products: [],
+      searchValue: '',
     }
+  },
+  computed: {
+    filteredItems: function(){
+      return this.products.filter((item) => {
+        return item.name.match(this.searchValue) || item.kode_produk.match(this.searchValue)
+      });
+    },
   },
   methods: {
     searchProduct(e){
-
+      this.searchValue = e
     },
     getData() {
       firebase.database().ref('products')
@@ -50,6 +58,7 @@ export default {
             cid: key,
           }));
           this.products = list
+          
         }
       });
     },

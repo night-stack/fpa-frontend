@@ -4,8 +4,11 @@ v-layout(column)
     v-icon mdi-plus
     | Tambah Produk
   v-text-field.mt-5(v-model='searchValue', @change='searchProduct', label='Cari Nama Produk/Kode Produk', prepend-inner-icon='mdi-magnify', filled, dense)
-  v-data-table(:headers='headers', :items='items', hide-default-footer)
+  v-data-table(:headers='headers', :items='filteredItems', hide-default-footer)
     v-progress-linear(slot='progress', color='primary', indeterminate)
+    template(v-slot:item.name="{item}")
+      td
+        p.max {{item.name}}
     template(v-slot:item.image="{item}")
       td
         img.mx-3(:src='item.image', alt='product', height='100')
@@ -13,7 +16,7 @@ v-layout(column)
       td Rp {{Intl.NumberFormat('id').format(item.price)}}
     template(v-slot:item.shelf="{item}")
       td
-        .map-button(@click='handleMap', style='cursor: pointer')
+        .map-button(@click='handleMap(item.shelf)', style='cursor: pointer')
           v-icon(large, color="blue darken-2") mdi-map-marker
           span.blue--text Lihat lokasi
     template(v-slot:item.edit='{item}')
@@ -83,6 +86,13 @@ export default {
       ].map(data => ({...data, sortable: false})),
     }
   },
+  computed: {
+    filteredItems: function(){
+      return this.items.filter((item) => {
+        return item.name.match(this.searchValue) || item.kode_produk.match(this.searchValue)
+      });
+    },
+  },
   methods: {
     goToManageProduct(item = {}){
       this.selectedProduct = item;
@@ -101,10 +111,10 @@ export default {
       this.openDeletedForm = true;
     },
     searchProduct(e){
-
+      this.searchValue = e
     },
-    handleMap(e){
-      
+    handleMap(rak){
+      this.$router.push({ path: '/map', query: { rak } })
     },
     async getData(){
       await firebase.database().ref('products')
@@ -125,7 +135,7 @@ export default {
 </script>
 
 <style scoped>
-  td .text-start {
-    max-width: 15rem!important
+  .max{
+    max-width: 13rem!important
   }
 </style>

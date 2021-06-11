@@ -137,6 +137,7 @@ export default {
         });
         this.$toast.success('Berhasil tersimpan.')
         this.$emit('input', false);
+        this.getData()
       }
     },
     async getData(){
