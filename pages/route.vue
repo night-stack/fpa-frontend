@@ -1,44 +1,74 @@
-<template lang=pug>
+<template lang="pug">
   v-layout(column)
     h1.display-0.mb-10 Pilih produk yang ingin anda cari
+    v-text-field.mt-5(v-model='searchValue', @change='searchProduct', label='Cari Nama Produk/Kode Produk', prepend-inner-icon='mdi-magnify', filled, dense)
     v-row(row, nowrap)
       v-col(cols='9')
         v-row(row, wrap)
-          v-col(v-for='i in 4', cols='6')
-            v-card.card-light.mx-auto.mb-3()
+          v-col(v-for='(item, i) in filteredItems', cols='6')
+            v-card.card-light.mx-auto.mb-3(min-height='460px', max-height='470px')
               v-list-item-content
                 v-row.justify-space-between.px-6.py-6(column, nowrap)
                   v-col.text-center.card-image.flex-grow-0.mx-auto(style='flex-basis: 300px')
-                    img.mx-3( :src='`/product-1.jpg`', alt='product', height='200')
+                    img.mx-3( :src='item.image', alt='product', height='200')
                   v-col.item-description-container()
-                    h4.display-1.mb-3 Blue Band {{i}} 250 gram
-                    p #[b Rp 10.000 ]
-                    v-btn(@click='toggle(i-1)' :color='indexExists(i-1) ? primary: secondary ') {{ indexExists(i-1) ? 'Hapus' : 'Cari' }}
+                    h4.display-1.mb-3 {{item.name}}
+                    p #[b Rp {{Intl.NumberFormat('id').format(item.price)}} ]
+                    v-btn(@click='toggle(item.shelf)' :color='indexExists(item.shelf) !== -1 ? "error" : "primary" ') {{ indexExists(item.shelf) !== -1 ? 'Hapus' : 'Cari' }}
       v-col(cols='3')
         p 
-          strong Produk dipilih: {{selectedProducts.length}}
+          strong Produk dipilih: {{selectedProducts.length - 1}}
         br
         v-btn(@click='findProduct' color='primary') Cari
 </template>
 
 <script>
+import firebase from '../plugins/firebase'
 import qs from 'querystring';
 
 export default {
   name: 'Route',
+  mounted() {
+    this.getData()
+  },
   data(){
     return{
-      selectedProducts: [],
+      selectedProducts: ['X'],
+      products: [],
+      searchValue: '',
     }
   },
   computed: {
+    filteredItems: function(){
+      return this.products.filter((item) => {
+        return item.name.match(this.searchValue) || item.kode_produk.match(this.searchValue)
+      });
+    },
   },
   methods: {
+    searchProduct(e){
+      this.searchValue = e
+    },
+    async getData() {
+      await firebase.database().ref('products')
+      .once('value', (snapshot) => {
+        const object = snapshot.val();
+
+        if (object) {
+          const list = Object.keys(object).map((key) => ({
+            ...object[key],
+            cid: key,
+          }));
+          this.products = list
+          
+        }
+      });
+    },
     findProduct(){
       if (this.selectedProducts.length < 2){
         const lastShelf = this.selectedProducts[selectedProducts.length - 1]
         this.selectedProducts.push(lastShelf)
-        
+
         // this.$toast.error('Minimal 2 produk');
       }
       else{
@@ -64,15 +94,16 @@ export default {
       }
     },
 
-    indexExists(idx){
-      return this.selectedProducts.includes(idx);
+    indexExists(shelf){
+      return this.selectedProducts.indexOf(shelf)
     },
-    toggle(idx){
-      const findIdx = this.selectedProducts.indexOf(idx);
+    toggle(shelf){
+      // console.log(idx)
+      const findIdx = this.selectedProducts.indexOf(shelf);
       if (findIdx !== -1) {
         this.selectedProducts.splice(findIdx,1);
       }
-      else this.selectedProducts.push(idx);
+      else this.selectedProducts.push(shelf);
       console.log(this.selectedProducts);
     },
   },
