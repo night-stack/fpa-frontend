@@ -28,9 +28,6 @@ const actions = {
     fetch(`https://api-fpa.herokuapp.com/findbestroute`, {
       method: 'POST',
       body: data,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
     });
   },
 };
