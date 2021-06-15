@@ -19,7 +19,7 @@
         p 
           strong Produk dipilih: {{selectedProducts.length - 1}}
         br
-        v-btn(@click='findProduct' color='primary') Cari
+        v-btn(@click='findProduct' :color='this.process ? "black" : "primary"') {{this.process ? 'Proses' : 'Cari'}}
         //- v-btn(@click='hitung') Hitung
 </template>
 
@@ -39,6 +39,7 @@ export default {
       searchValue: '',
       data: [],
       start: [],
+      process: false,
     }
   },
   computed: {
@@ -92,6 +93,7 @@ export default {
       });
     },
     async findProduct(){
+      this.process = true
       if (this.selectedProducts.length === 2){
         const lastShelf = this.selectedProducts[this.selectedProducts.length - 1]
         this.selectedProducts.push(lastShelf)
@@ -130,6 +132,7 @@ export default {
           let params = new URLSearchParams(payload)
           this.$router.push('/map')
           this.$store.dispatch('findBestRoute', params);
+          // this.process = false
         }
       }else if(this.selectedProducts.length >= 2){
         const start_city = 'X'
@@ -166,6 +169,7 @@ export default {
 
         let params = new URLSearchParams(payload)
         this.$store.dispatch('findBestRoute', params);
+        // this.process = false
         // this.$router.push('/map')
       }else{
         this.$toast.error('Minimal pilih 1 produk');
