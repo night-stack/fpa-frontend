@@ -75,6 +75,7 @@ export default {
   /* the slides */
   .slick-slide {
     margin-right: 5px;
+    max-width: 382px;
   }
   .slick-track, .slick-list{
     max-height: 300px;
