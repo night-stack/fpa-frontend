@@ -23,7 +23,7 @@
                 label='Foto Produk'
               )
               v-img(v-if='previewImageURL', height='300' width='300' :src="previewImageURL")
-              v-btn.mr-3(@click='$emit("input", false)', color='warning') Batal
+              v-btn.mr-3(@click='clear', color='warning') Batal
               v-btn(@click='save', color='secondary') Simpan
 
 </template>
@@ -40,13 +40,16 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    closeForm: {
+      type: Function,
+    },
     value: {
       type: Boolean,
       default: false,
     },
   },
   mounted(){
-    if (!this.product){
+    if(!Object.keys(this.product).length){
       this.getData()
     }
   },
@@ -78,6 +81,9 @@ export default {
       if(this.product){
         this.previewImageURL = this.product.image
         this.formData = { ...this.product };
+        return true
+      } else {
+        return false
       }
     },
   },
@@ -87,6 +93,13 @@ export default {
     },
   },
   methods: {
+    clear(){
+      if(!Object.keys(this.product).length){
+        this.closeForm(this.formData.kode_produk)
+      } else {
+        this.closeForm()
+      }
+    },
     showPreviewImage(){
       if (this.formData.foto){
         this.previewImageURL= URL.createObjectURL(this.formData.foto)
@@ -97,7 +110,6 @@ export default {
       this.$refs.form.validate();
       await this.$nextTick();
       if(this.valid){
-        console.log(this.formData)
         const metadata = {
         contentType: 'image/jpeg',
         };

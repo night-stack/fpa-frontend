@@ -77,13 +77,13 @@ export default {
             ...object[key],
             cid: key,
           }));
-          const filter = list.filter(i => i.shelf !== 'T')
+          const filter = list.filter(i => i.shelf !== 'B')
           this.data = filter
           
         }
       });
 
-      await firebase.database().ref('shelfs/T')
+      await firebase.database().ref('shelfs/B')
       .once('value', (snapshot) => {
         const object = snapshot.val();
 
@@ -93,6 +93,7 @@ export default {
       });
     },
     async findProduct(){
+      // menemukan produk terpilih berdasakan rak terakhir
       this.process = true
       if (this.selectedProducts.length === 2){
         const lastShelf = this.selectedProducts[this.selectedProducts.length - 1]
@@ -176,6 +177,7 @@ export default {
       }
     },
     indexExists(shelf){
+      // cek index
       return this.selectedProducts.indexOf(shelf)
     },
     toggle(shelf){
@@ -188,6 +190,7 @@ export default {
       // console.log(this.selectedProducts);
     },
     hitung(){
+      // hitung jarak antar titik manual
       const array = []
 
       this.data.forEach(i => {
@@ -201,7 +204,8 @@ export default {
           rak: i.shelf,
           hasil,
         })
-      });      
+      });
+      // console.log(array)      
     },
   },
 }

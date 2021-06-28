@@ -100,16 +100,20 @@ export default {
           to: '/login',
           title: 'Login',
         },
-        {
-          to: '/register',
-          title: 'Register',
-        },
       ],
       adminLinks: [
         {
           to: '/data-products',
           title: 'DATA PRODUK',
         },
+        // {
+        //   to: '/data-karyawan',
+        //   title: 'Karyawan',
+        // },
+        // {
+        //   to: '/auth',
+        //   title: 'Auth',
+        // },
       ],
       miniVariant: false,
       right: true,

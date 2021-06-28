@@ -25,7 +25,7 @@ v-layout(column)
           v-icon mdi-pencil
         v-btn( @click='goToDeleteForm(item)').mx-3
           v-icon(color='error') mdi-delete
-  manage-product-form(v-model='openManageForm', :product='selectedProduct' :closeForm='closeForm')
+  manage-product-form(v-model='openManageForm', :product='selectedProduct')
   v-dialog(v-model='openDeleteForm', width='400')
     v-card.text-center.py-3.px-3
       p Apakah anda ingin menghapus {{selectedProductToDelete.nama }} ? {{selectedProductToDelete.kode_produk}}
@@ -104,42 +104,6 @@ export default {
     goToDeleteForm(item){
       this.selectedProductToDelete = item;
       this.openDeleteForm = true;
-    },
-    async closeForm(kode = null){
-      if(null){
-        this.selectedProduct = {};
-      }else{
-        await firebase.database().ref('products')
-        .once('value', (snapshot) => {
-          const object = snapshot.val();
-
-          if (object) {
-            const list = Object.keys(object).map((key) => ({
-              ...object[key],
-              cid: key,
-            }));
-
-            let kodeProduk = 'KP00001'
-            const urutan = parseInt(list[list.length - 1]?.kode_produk.substr(2, 5))
-            const kodeUrut = urutan + 1
-            if (kodeUrut.toString().length === 2) {
-              kodeProduk = `KP000${kodeUrut}`
-            } else if (kodeUrut.toString().length === 3) {
-              kodeProduk = `KP00${kodeUrut}`
-            } else if (kodeUrut.toString().length === 4) {
-              kodeProduk = `KP0${kodeUrut}`
-            } else if (kodeUrut.toString().length === 5) {
-              kodeProduk = `KP${kodeUrut}`
-            } else {
-              kodeProduk = `KP0000${kodeUrut}`
-            }
-            this.selectedProduct = {
-              kode_produk: kodeProduk,
-            };
-          }
-        });
-      }
-      this.openManageForm = false;
     },
     proceedToDelete(){
       this.items = this.items.filter(item => item.kode_produk !== this.selectedProductToDelete.kode_produk)
