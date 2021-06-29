@@ -37,7 +37,7 @@ export default {
       this.$refs.form.validate();
       await this.$nextTick();
       if(this.valid){
-        console.log(this.formData)
+        // console.log(this.formData)
         //proceed register
       firebase
         .auth()

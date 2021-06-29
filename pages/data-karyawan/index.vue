@@ -1,9 +1,9 @@
 <template lang="pug">
 v-layout(column)
-  v-btn(@click='goToAddProduct').align-self-start 
+  v-btn(@click='goToAddUser').align-self-start 
     v-icon mdi-plus
-    | Tambah Produk
-  v-text-field.mt-5(v-model='searchValue', @change='searchProduct', label='Cari Nama Produk/Kode Produk', prepend-inner-icon='mdi-magnify', filled, dense)
+    | Tambah Karyawan
+  v-text-field.mt-5(v-model='searchValue', @change='searchUser', label='Cari Nama Karyawan', prepend-inner-icon='mdi-magnify', filled, dense)
   v-data-table(:headers='headers', :items='filteredItems', hide-default-footer)
     v-progress-linear(slot='progress', color='primary', indeterminate)
     template(v-slot:item.name="{item}")
@@ -11,41 +11,37 @@ v-layout(column)
         p.max {{item.name}}
     template(v-slot:item.image="{item}")
       td
-        img.mx-3(:src='item.image', alt='product', height='100')
-    template(v-slot:item.price="{item}")
-      td Rp {{Intl.NumberFormat('id').format(item.price)}}
-    template(v-slot:item.shelf="{item}")
+        img.mx-3(:src='item.image', alt='users', height='100')
+    template(v-slot:item.email="{item}")
       td
-        .map-button(@click='handleMap(item.shelf)', style='cursor: pointer')
-          v-icon(large, color="blue darken-2") mdi-map-marker
-          span.blue--text Lihat lokasi
+        p.max {{item.email}}
     template(v-slot:item.edit='{item}')
       td
-        v-btn(@click='goToManageProduct(item)')
+        v-btn(@click='goToManageUser(item)')
           v-icon mdi-pencil
-        v-btn( @click='goToDeleteForm(item)').mx-3
-          v-icon(color='error') mdi-delete
-  manage-product-form(v-model='openManageForm', :product='selectedProduct')
+        //- v-btn( @click='goToDeleteForm(item)').mx-3
+        //-   v-icon(color='error') mdi-delete
+  manage-user-form(v-model='openManageForm', :user='selectedUser' :closeForm='closeForm')
   v-dialog(v-model='openDeleteForm', width='400')
     v-card.text-center.py-3.px-3
-      p Apakah anda ingin menghapus {{selectedProductToDelete.nama }} ? {{selectedProductToDelete.kode_produk}}
+      p Apakah anda ingin menghapus {{openDeleteFormToDelete.name }} ? {{openDeleteFormToDelete.uid}}
       v-btn.mr-3(color='primary' @click='proceedToDelete') Ya
       v-btn(color='secondary' @click='openDeleteForm = false') Tidak
   v-dialog(v-model='openDeletedForm', width='400')
     v-card.text-center.py-3.px-3
-      p Produk {{selectedProductToDelete.nama }} {{selectedProductToDelete.kode_produk}} Berhasil dihapus.
+      p User {{openDeleteFormToDelete.name }} {{openDeleteFormToDelete.uid}} Berhasil dihapus.
       v-btn(color='secondary' @click='openDeletedForm = false') Oke
 </template>
 
 
 <script>
 import firebase from '../../plugins/firebase'
-import ManageProductForm from '/components/ManageProductForm';
+import ManageUserForm from '/components/ManageUserForm';
 
 export default {
-  name: 'AdminDataProducts',
+  name: 'AdminDataUsers',
   components: {
-    ManageProductForm,
+    ManageUserForm,
   },
   mounted(){
     if (!this.$store.getters['getAdminStatus']) {
@@ -59,29 +55,16 @@ export default {
     return{
       openManageForm: false,
       openDeleteForm: false,
-      selectedProduct: {},
-      selectedProductToDelete: {},
+      selectedUser: {},
+      selectedUserToDelete: {},
+      openDeleteFormToDelete: {},
       openDeletedForm: false,
-      items: [
-        {
-          kode_produk: 'BR00121',
-          name: 'Blue Band',
-          brand: 'Unilever',
-          price: '15000',
-          status: 'Ada',
-          stock: 21,
-        },
-      ],
+      items: [],
       searchValue: '',
       headers: [
-        {text: 'Kode Produk', value: 'kode_produk'},
-        {text: 'Gambar', value: 'image'},
-        {text: 'Nama Produk', value: 'name'},
-        {text: 'Brand', value: 'brand'},
-        {text: 'Harga', value: 'price'},
-        {text: 'Status', value: 'status'},
-        {text: 'Stock', value: 'stock'},
-        {text: 'Lokasi', value: 'shelf'},
+        {text: 'Profil', value: 'image'},
+        {text: 'Nama', value: 'name'},
+        {text: 'Email', value: 'email'},
         {text: 'Edit', value: 'edit'},
       ].map(data => ({...data, sortable: false})),
     }
@@ -89,35 +72,38 @@ export default {
   computed: {
     filteredItems: function(){
       return this.items.filter((item) => {
-        return item.name.match(this.searchValue) || item.kode_produk.match(this.searchValue)
+        return item.name.match(this.searchValue)
       });
     },
   },
   methods: {
-    goToManageProduct(item = {}){
-      this.selectedProduct = item;
+    goToManageUser(item = {}){
+      this.selectedUser = item;
       this.openManageForm = true;
     },
-    goToAddProduct(){
+    goToAddUser(){
       this.openManageForm = true;
     },
     goToDeleteForm(item){
-      this.selectedProductToDelete = item;
+      this.selectedUserToDelete = item;
       this.openDeleteForm = true;
     },
-    proceedToDelete(){
-      this.items = this.items.filter(item => item.kode_produk !== this.selectedProductToDelete.kode_produk)
+    closeForm(){
+      this.selectedUser = {};
+      this.openManageForm = false;
+    },
+    async proceedToDelete(){
+      this.items = this.items.filter(item => item.uid !== this.openDeleteFormToDelete.uid);
+      await firebase.database().ref(`users/${this.selectedProductToDelete.uid}`).remove();
+      this.selectedProductToDelete = {};
       this.openDeleteForm = false;
       this.openDeletedForm = true;
     },
-    searchProduct(e){
+    searchUser(e){
       this.searchValue = e
     },
-    handleMap(rak){
-      this.$router.push({ path: '/map', query: { rak } })
-    },
     async getData(){
-      await firebase.database().ref('products')
+      await firebase.database().ref('users')
       .once('value', (snapshot) => {
         const object = snapshot.val();
 

@@ -106,10 +106,10 @@ export default {
           to: '/data-products',
           title: 'DATA PRODUK',
         },
-        // {
-        //   to: '/data-karyawan',
-        //   title: 'Karyawan',
-        // },
+        {
+          to: '/data-karyawan',
+          title: 'DATA KARYAWAN',
+        },
         // {
         //   to: '/auth',
         //   title: 'Auth',

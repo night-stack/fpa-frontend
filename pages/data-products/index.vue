@@ -28,12 +28,12 @@ v-layout(column)
   manage-product-form(v-model='openManageForm', :product='selectedProduct' :closeForm='closeForm')
   v-dialog(v-model='openDeleteForm', width='400')
     v-card.text-center.py-3.px-3
-      p Apakah anda ingin menghapus {{selectedProductToDelete.nama }} ? {{selectedProductToDelete.kode_produk}}
+      p Apakah anda ingin menghapus {{selectedProductToDelete.name }} ? {{selectedProductToDelete.kode_produk}}
       v-btn.mr-3(color='primary' @click='proceedToDelete') Ya
       v-btn(color='secondary' @click='openDeleteForm = false') Tidak
   v-dialog(v-model='openDeletedForm', width='400')
     v-card.text-center.py-3.px-3
-      p Produk {{selectedProductToDelete.nama }} {{selectedProductToDelete.kode_produk}} Berhasil dihapus.
+      p Produk {{selectedProductToDelete.name }} {{selectedProductToDelete.kode_produk}} Berhasil dihapus.
       v-btn(color='secondary' @click='openDeletedForm = false') Oke
 </template>
 
@@ -106,7 +106,7 @@ export default {
       this.openDeleteForm = true;
     },
     async closeForm(kode = null){
-      if(null){
+      if(kode){
         this.selectedProduct = {};
       }else{
         await firebase.database().ref('products')
@@ -141,8 +141,10 @@ export default {
       }
       this.openManageForm = false;
     },
-    proceedToDelete(){
+    async proceedToDelete(){
       this.items = this.items.filter(item => item.kode_produk !== this.selectedProductToDelete.kode_produk)
+      await firebase.database().ref(`products/${this.selectedProductToDelete.id}`).remove();
+      this.selectedProductToDelete = {};
       this.openDeleteForm = false;
       this.openDeletedForm = true;
     },

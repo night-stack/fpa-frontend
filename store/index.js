@@ -19,7 +19,7 @@ const actions = {
     }
     if (email !== 'admin@maou.com') {
       commit('setUsername', email);
-      commit('setAdminStatus', false);
+      commit('setAdminStatus', true);
     }
   },
   logout({ commit }) {

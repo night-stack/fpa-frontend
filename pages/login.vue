@@ -50,6 +50,7 @@ export default {
         })
         .catch(error => {
           this.error = error
+          this.$toast.error(error);
         })
       }
     },
