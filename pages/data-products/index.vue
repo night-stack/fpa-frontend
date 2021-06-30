@@ -95,13 +95,16 @@ export default {
   },
   methods: {
     goToManageProduct(item = {}){
+      // edit modal
       this.selectedProduct = item;
       this.openManageForm = true;
     },
     goToAddProduct(){
+      // modal tambah produk
       this.openManageForm = true;
     },
     goToDeleteForm(item){
+      // set hapus produk
       this.selectedProductToDelete = item;
       this.openDeleteForm = true;
     },
@@ -118,7 +121,8 @@ export default {
               ...object[key],
               cid: key,
             }));
-
+            
+            // buat kode automatis
             let kodeProduk = 'KP00001'
             const urutan = parseInt(list[list.length - 1]?.kode_produk.substr(2, 5))
             const kodeUrut = urutan + 1
@@ -142,16 +146,19 @@ export default {
       this.openManageForm = false;
     },
     async proceedToDelete(){
+      // hapus product
       this.items = this.items.filter(item => item.kode_produk !== this.selectedProductToDelete.kode_produk)
       await firebase.database().ref(`products/${this.selectedProductToDelete.id}`).remove();
       this.selectedProductToDelete = {};
       this.openDeleteForm = false;
       this.openDeletedForm = true;
+      this.getData()
     },
     searchProduct(e){
       this.searchValue = e
     },
     handleMap(rak){
+      // cari produk di rak
       this.$router.push({ path: '/map', query: { rak } })
     },
     async getData(){

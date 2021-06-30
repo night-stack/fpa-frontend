@@ -94,9 +94,10 @@ export default {
       });
     },
     async findProduct(){
-      // menemukan produk terpilih berdasakan rak terakhir
+      // proses pencarian rute
       this.process = true
       if (this.selectedProducts.length === 2){
+        // menemukan produk terpilih berdasakan rak terakhir
         const lastShelf = this.selectedProducts[this.selectedProducts.length - 1]
         this.selectedProducts.push(lastShelf)
         if(lastShelf){
@@ -126,6 +127,7 @@ export default {
             "T":{"X":1020,"A":1303,"B":1290,"C":1316,"D":1380,"E":985,"F":1193,"G":1199,"H":1078,"I":1222,"J":1048,"K":845,"L":850,"M":809,"N":788,"O":766,"P":766,"Q":379,"R":476,"S":81,"T":0,"U":1102},
             "U":{"X":237,"A":217,"B":226,"C":397,"D":607,"E":120,"F":119,"G":223,"H":356,"I":437,"J":584,"K":689,"L":567,"M":484,"N":434,"O":361,"P":336,"Q":737,"R":1225,"S":1112,"T":1102,"U":0},
           }`
+          // tembak api
           let payload = new FormData();
           payload.append('cities', cities);
           payload.append('start_city', start_city);
@@ -163,7 +165,6 @@ export default {
           "T":{"X":1020,"A":1303,"B":1290,"C":1316,"D":1380,"E":985,"F":1193,"G":1199,"H":1078,"I":1222,"J":1048,"K":845,"L":850,"M":809,"N":788,"O":766,"P":766,"Q":379,"R":476,"S":81,"T":0,"U":1102},
           "U":{"X":237,"A":217,"B":226,"C":397,"D":607,"E":120,"F":119,"G":223,"H":356,"I":437,"J":584,"K":689,"L":567,"M":484,"N":434,"O":361,"P":336,"Q":737,"R":1225,"S":1112,"T":1102,"U":0},
         }`
-      
         let payload = new FormData();
         payload.append('cities', cities);
         payload.append('start_city', start_city);
@@ -182,7 +183,7 @@ export default {
       return this.selectedProducts.indexOf(shelf)
     },
     toggle(shelf){
-      // console.log(idx)
+      // memilih rak yang di cari
       const findIdx = this.selectedProducts.indexOf(shelf);
       if (findIdx !== -1) {
         this.selectedProducts.splice(findIdx,1);

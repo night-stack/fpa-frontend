@@ -118,6 +118,7 @@ export default {
   name: 'Map',
   mounted(){
     if(this.$route.query && this.$route.query.rak){
+      // menghapus data api yang di dapat
       this.$store.commit('setRoute', null)
     }
   },
@@ -130,13 +131,10 @@ export default {
     ...mapGetters({
       data: 'getRoute',
     }),
-    fetch(){
-      const rute = this.$store.getters['getRoute'];
-      console.log(rute)
-    },
   },
   methods: {
     indexExists(shelf){
+      // cari index rak
         if(this.data?.route){
             return this.data.route.indexOf(shelf)
         } else {

@@ -64,6 +64,7 @@ export default {
     },
 
     goTo(rak){
+      // cari rak
       this.$router.push({ path: '/map', query: { rak } })
     },
   },
