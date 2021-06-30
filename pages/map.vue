@@ -107,7 +107,7 @@
         p {{data.total_distance / 100}} meter
         p 
             strong Rute yang dilalui
-        p {{data.route.toString()}}
+        p {{getUnique(data.route)}}
         
 </template>
 
@@ -116,18 +116,44 @@ import {mapGetters} from 'vuex';
 
 export default {
   name: 'Map',
+  mounted(){
+    if(this.$route.query && this.$route.query.rak){
+      this.$store.commit('setRoute', null)
+    }
+  },
+  data(){
+    return{
+      rute: [],
+    }
+  },
   computed: {
     ...mapGetters({
       data: 'getRoute',
     }),
+    fetch(){
+      const rute = this.$store.getters['getRoute'];
+      console.log(rute)
+    },
   },
   methods: {
     indexExists(shelf){
-        if(this.data){
+        if(this.data?.route){
             return this.data.route.indexOf(shelf)
         } else {
             return -1
         }
+    },
+    getUnique(array){
+      // fungsi utk menghapus karakter yang sama
+      var uniqueArray = [];
+      for (let i = 0; i < array.length; i++) {
+        // const element = array[index];
+        if(uniqueArray.indexOf(array[i]) === -1) {
+            uniqueArray.push(array[i]);
+        }
+      }
+      const str = uniqueArray.toString(); 
+      return str.replaceAll(",", " - ");
     },
   },
 }

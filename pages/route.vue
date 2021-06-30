@@ -13,6 +13,7 @@
                     img.mx-3( :src='item.image', alt='product', height='200')
                   v-col.item-description-container()
                     h4.display-1.mb-3 {{item.name}}
+                    p #[b Rak {{item.shelf}} ]
                     p #[b Rp {{Intl.NumberFormat('id').format(item.price)}} ]
                     v-btn(@click='toggle(item.shelf)' :color='indexExists(item.shelf) !== -1 ? "error" : "primary"') {{ indexExists(item.shelf) !== -1 ? 'Hapus' : 'Cari' }}
       v-col(cols='3')
