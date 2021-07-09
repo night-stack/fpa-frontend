@@ -107,8 +107,16 @@
         p {{data.total_distance / 100}} meter
         p 
             strong Rute yang dilalui
-        p {{getUnique(data.route)}}
-        
+        p titik {{getUnique(data.route)}}
+        p     
+            strong Proses yang dilalui
+        v-ul(v-for="(value,  index) in (data.route_value)" :key="index" )
+          v-li
+            div
+              span {{data.route[index]+" - "+data.route[index+1]+" -> "}} 
+              span {{parseInt(value)/100}} meter
+            
+
 </template>
 
 <script>
@@ -125,6 +133,7 @@ export default {
   data(){
     return{
       rute: [],
+      routes:[],
     }
   },
   computed: {
@@ -150,8 +159,8 @@ export default {
             uniqueArray.push(array[i]);
         }
       }
-      const str = uniqueArray.toString(); 
-      return str.replaceAll(",", " - ");
+      const str = uniqueArray.toString();
+      return str.replaceAll(",", " ke ");
     },
   },
 }
