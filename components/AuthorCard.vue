@@ -26,11 +26,7 @@ export default {
       },
       description: {
         type: String,
-        default: `Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque eveniet cum odio veniam, ipsa voluptas a quia dolorem! Qui repudiandae labore optio nobis itaque ducimus ut, atque tempora aspernatur impedit.
-Magnam aperiam quibusdam quidem! Doloribus magnam aliquam velit repudiandae provident aperiam dicta earum quam cupiditate molestiae nobis porro quos facere eos culpa, a blanditiis reprehenderit pariatur quasi! Soluta, ab aliquid.
-Ducimus ex voluptatem cum repellendus eum facilis fugiat voluptatibus perspiciatis incidunt sunt. Sint, iusto. Odit eius omnis, incidunt sint dolor porro eveniet, reprehenderit velit ea quos, impedit placeat tempore consectetur.
-Officiis, rem est. Dolor, totam eaque voluptate natus numquam, voluptatem sit sequi recusandae esse a tempore illo nesciunt, hic nostrum? Laboriosam, cumque possimus fuga ipsam assumenda quasi itaque adipisci dolores.
-Expedita placeat animi ducimus fuga corporis cum nihil. Quasi voluptate nulla suscipit nobis nihil necessitatibus deleniti ad, rerum laboriosam tempora sed quia in esse atque dolor repellat omnis nisi amet.`,
+        default: "Pemilik Website",
       },
     },
 }

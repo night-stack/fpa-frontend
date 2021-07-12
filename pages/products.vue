@@ -10,7 +10,7 @@
             h4.display-1 {{item.name}} || {{item.brand}}
             p #[b Rp {{Intl.NumberFormat('id').format(item.price)}} ]
             .item-info
-              span Stock: {{item.stock}}
+              //span Stock: {{item.stock}}
               span &nbsp; Status: {{item.status === 'available' ? 'Tersedia' : 'Kosong'}}
               span &nbsp; Lokasi: RAK {{item.shelf}}
       .map-button
