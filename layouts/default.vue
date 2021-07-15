@@ -78,6 +78,10 @@ export default {
           to: '/route',
           title: 'ROUTE',
         },
+        {
+          to: '/algo',
+          title: 'ALGO',
+        },
       ],
       guestLinks: [
         {
@@ -95,6 +99,10 @@ export default {
         {
           to: '/route',
           title: 'ROUTE',
+        },
+        {
+          to: '/algo',
+          title: 'ALGO',
         },
         {
           to: '/login',

@@ -2,6 +2,7 @@ const initialState = {
   isAdmin: false,
   username: '',
   route: null,
+  data: null,
 };
 
 const getters = {
@@ -28,6 +29,20 @@ const actions = {
   },
   async findBestRoute({ commit }, data) {
     const httpRequest = await fetch(`https://api-fpa.herokuapp.com/findbestroute`, {
+      method: 'POST',
+      body: data,
+      headers: {
+        'Content-Type': `application/x-www-form-urlencoded`,
+      },
+    });
+    const response = await httpRequest.json();
+    if (response) {
+      commit('setRoute', response);
+      this.$router.push('/map');
+    }
+  },
+  async tes({ commit }, data) {
+    const httpRequest = await fetch(`localhost:3001/product`, {
       method: 'POST',
       body: data,
       headers: {
