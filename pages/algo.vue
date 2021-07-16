@@ -8,6 +8,12 @@ v-layout(column)
     template(v-slot:item.nama="{item}")
       td
         p.max {{item.nama}}
+    template(v-slot:item.id_rak="{item}")
+      td
+        p(v-if='item.id_rak === 1').max A
+        p(v-if='item.id_rak === 2').max B
+        p(v-if='item.id_rak === 3').max C
+        p(v-if='item.id_rak === 4').max D
     template(v-slot:item.harga_toko="{item}")
       td Rp {{Intl.NumberFormat('id').format(item.harga_toko)}}
   manage-product-form(v-model='openManageForm', :product='selectedProduct' :closeForm='closeForm')
