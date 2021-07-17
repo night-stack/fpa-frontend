@@ -18,7 +18,7 @@
                     v-btn(@click='toggle(item.shelf)' :color='indexExists(item.shelf) !== -1 ? "error" : "primary"') {{ indexExists(item.shelf) !== -1 ? 'Hapus' : 'Cari' }}
       v-col(cols='3')
         p 
-          strong Produk dipilih: {{selectedProducts.length - 1}}
+          strong Rak yang dipilih: {{selectedProducts.length - 1}}
         br
         v-btn(@click='findProduct' :color='this.process ? "black" : "primary"') {{this.process ? 'Proses' : 'Cari'}}
         //- v-btn(@click='hitung') Hitung

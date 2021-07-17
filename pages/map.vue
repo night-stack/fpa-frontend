@@ -113,7 +113,7 @@
         v-ul(v-for="(value,  index) in (data.route_value)" :key="index" )
           v-li
             div
-              span {{data.route[index]+" - "+data.route[index+1]+" -> "}} 
+              span titik {{data.route[index]+" ke "+data.route[index+1]+" -> "}} 
               span {{parseInt(value)/100}} meter
             
 

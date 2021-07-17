@@ -1,5 +1,5 @@
 <template lang="pug">
-.author-card
+.or-card
   v-card.mx-auto(max-width='1000px')
     v-list-item()
       v-list-item-avatar(tile size='200' color='grey')
@@ -14,7 +14,7 @@
 <script>
 
 export default {
-    name: 'AuthorCard',
+    name: 'orCard',
     props: {
       avatarURL: {
         type: String,
@@ -26,14 +26,14 @@ export default {
       },
       description: {
         type: String,
-        default: "Pemilik Website",
+        default: "card description",
       },
     },
 }
 </script>
 
 <style scoped>
-    /* .author-card{
+    /* .or-card{
         background-color: white;
     } */
 </style>

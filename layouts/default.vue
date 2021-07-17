@@ -100,10 +100,10 @@ export default {
           to: '/route',
           title: 'ROUTE',
         },
-        {
-          to: '/algo',
-          title: 'ALGO',
-        },
+        // {
+        //   to: '/algo',
+        //   title: 'ALGO',
+        // },
         {
           to: '/login',
           title: 'Login',
@@ -118,10 +118,10 @@ export default {
           to: '/data-karyawan',
           title: 'DATA KARYAWAN',
         },
-        // {
-        //   to: '/auth',
-        //   title: 'Auth',
-        // },
+         {
+           to: '/algo',
+           title: 'ALGO',
+         },
       ],
       miniVariant: false,
       right: true,

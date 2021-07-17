@@ -104,8 +104,9 @@ export default {
       b:null,
       c:null,
       d:null,
+      e:null,
     }
-  },
+  },  
   computed: {
     filteredItems: function(){
       return this.items.filter((item) => {
@@ -156,6 +157,7 @@ export default {
               this.d = response.data
             }
         });
+       
     },
     goToDeleteForm(item){
       // set hapus produk
