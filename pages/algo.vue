@@ -3,13 +3,36 @@ v-layout(column)
   v-btn(@click='goToAddProduct').align-self-start 
     | Cari Produk
   v-text-field.mt-5(v-model='searchValue', @change='searchProduct', label='Cari Nama Produk/Kode Produk', prepend-inner-icon='mdi-magnify', filled, dense)
-  v-data-table(:headers='headers', :items='filteredItems', hide-default-footer)
+  v-data-table(:headers='headers', :items='filteredItems')
     v-progress-linear(slot='progress', color='primary', indeterminate)
     template(v-slot:item.nama="{item}")
       td
         p.max {{item.nama}}
     template(v-slot:item.harga_toko="{item}")
       td Rp {{Intl.NumberFormat('id').format(item.harga_toko)}}
+    template(v-slot:item.id_rak="{item}")
+      td
+        p(v-if='item.id_rak === 1').max A
+        p(v-if='item.id_rak === 2').max B
+        p(v-if='item.id_rak === 3').max C
+        p(v-if='item.id_rak === 4').max D
+        p(v-if='item.id_rak === 5').max E
+        p(v-if='item.id_rak === 6').max F
+        p(v-if='item.id_rak === 7').max G
+        p(v-if='item.id_rak === 8').max H
+        p(v-if='item.id_rak === 9').max I
+        p(v-if='item.id_rak === 10').max J
+        p(v-if='item.id_rak === 11').max K
+        p(v-if='item.id_rak === 12').max L
+        p(v-if='item.id_rak === 13').max M
+        p(v-if='item.id_rak === 14').max N
+        p(v-if='item.id_rak === 15').max O
+        p(v-if='item.id_rak === 16').max P
+        p(v-if='item.id_rak === 17').max Q
+        p(v-if='item.id_rak === 18').max R
+        p(v-if='item.id_rak === 19').max S
+        p(v-if='item.id_rak === 20').max T
+        p(v-if='item.id_rak === 21').max U
   manage-product-form(v-model='openManageForm', :product='selectedProduct' :closeForm='closeForm')
   v-dialog(v-model='openDeleteForm', width='400')
     v-card.text-center.py-3.px-3
@@ -21,47 +44,71 @@ v-layout(column)
       p Produk {{selectedProductToDelete.name }} {{selectedProductToDelete.kode_produk}} Berhasil dihapus.
       v-btn(color='secondary' @click='openDeletedForm = false') Oke
 
+  //- v-card.mt-5
+  //-   p
+  //-       strong Hasil Precision dari RAK A adalah : 
+  //-   p {{this.a && this.a.count}} / ({{this.a && this.a.produts}} - {{this.a && this.a.count}}) * 100 = {{this.a && this.a.precision}} %
+  //-   p 
+  //-       strong Hasil Precision dari RAK B adalah : 
+  //-   p {{this.b && this.b.count}} / ({{this.b && this.b.produts}} - {{this.b && this.b.count}}) * 100 = {{this.b && this.b.precision}} %
+  //-   p     
+  //-       strong Hasil Precision dari RAK C adalah :
+  //-   p {{this.c && this.c.count}} / ({{this.c && this.c.produts}} - {{this.c && this.c.count}}) * 100 = {{this.c && this.c.precision}} %
+  //-   p     
+  //-       strong Hasil Precision dari RAK D adalah :
+  //-   p {{this.d && this.d.count}} / ({{this.d && this.d.produts}} - {{this.d && this.d.count}}) * 100 = {{this.d && this.d.precision}} %
+
+  //- v-card.mt-5
+  //-   p
+  //-       strong Hasil Recall dari RAK A adalah : 
+  //-   p {{this.a && this.a.count}} / {{this.a && this.a.produts}} * 100 = {{this.a && this.a.recall}} %
+  //-   p 
+  //-       strong Hasil Recall dari RAK B adalah : 
+  //-   p {{this.b && this.b.count}} / {{this.b && this.b.produts}} * 100 = {{this.b && this.b.recall}} %
+  //-   p     
+  //-       strong Hasil Recall dari RAK C adalah :
+  //-   p {{this.c && this.c.count}} / {{this.c && this.c.produts}} * 100 = {{this.c && this.c.recall}} %
+  //-   p     
+  //-       strong Hasil Recall dari RAK D adalah :
+  //-   p {{this.d && this.d.count}} / {{this.d && this.d.products}} * 100 = {{this.d && this.d.recall}} %
+
+  //- v-card.mt-5
+  //-   p
+  //-       strong Hasil Akurasi dari RAK A adalah : 
+  //-   p {{this.a && this.a.count}} + {{this.a && this.b && this.c && this.d && (this.a.akurasi+this.b.akurasi+this.c.akurasi+this.d.akurasi)}} / {{this.items.length}} * 100 = {{this.a && this.b && this.c && this.d && (this.a.count+(this.a.akurasi+this.b.akurasi+this.c.akurasi+this.d.akurasi)/this.items.length*100)}} %
+  //-   p 
+  //-       strong Hasil Akurasi dari RAK B adalah : 
+  //-   p {{this.b && this.b.count}} + {{this.a && this.b && this.c && this.d && (this.a.akurasi+this.b.akurasi+this.c.akurasi+this.d.akurasi)}} / {{this.items.length}} * 100 = {{this.a && this.b && this.c && this.d && (this.b.count+(this.a.akurasi+this.b.akurasi+this.c.akurasi+this.d.akurasi)/this.items.length*100)}} %
+  //-   p     
+  //-       strong Hasil Akurasi dari RAK C adalah :
+  //-   p {{this.c && this.c.count}} + {{this.a && this.b && this.c && this.d && (this.a.akurasi+this.b.akurasi+this.c.akurasi+this.d.akurasi)}} / {{this.items.length}} * 100 = {{this.a && this.b && this.c && this.d && (this.c.count+(this.a.akurasi+this.b.akurasi+this.c.akurasi+this.d.akurasi)/this.items.length*100)}} %
+  //-   p     
+  //-       strong Hasil Akurasi dari RAK D adalah :
+  //-   p {{this.d && this.d.count}} + {{this.a && this.b && this.c && this.d && (this.a.akurasi+this.b.akurasi+this.c.akurasi+this.d.akurasi)}} / {{this.items.length}} * 100 = {{this.a && this.b && this.c && this.d && (this.d.count+(this.a.akurasi+this.b.akurasi+this.c.akurasi+this.d.akurasi)/this.items.length*100)}} %
+  
+  
   v-card.mt-5
-    p
-        strong Hasil Precision dari RAK A adalah : 
-    p {{this.a && this.a.count}} / ({{this.a && this.a.produts}} - {{this.a && this.a.count}}) * 100 = {{this.a && this.a.precision}} %
-    p 
-        strong Hasil Precision dari RAK B adalah : 
-    p {{this.b && this.b.count}} / ({{this.b && this.b.produts}} - {{this.b && this.b.count}}) * 100 = {{this.b && this.b.precision}} %
-    p     
-        strong Hasil Precision dari RAK C adalah :
-    p {{this.c && this.c.count}} / ({{this.c && this.c.produts}} - {{this.c && this.c.count}}) * 100 = {{this.c && this.c.precision}} %
-    p     
-        strong Hasil Precision dari RAK D adalah :
-    p {{this.d && this.d.count}} / ({{this.d && this.d.produts}} - {{this.d && this.d.count}}) * 100 = {{this.d && this.d.precision}} %
+    v-ul(v-for="(value,  index) in (Object.keys(data))" :key="index" )
+      v-li
+        p 
+          strong Hasil Precision dari {{value}} adalah :
+        p ({{ data[value].count}} / {{data[value].products}}) * 100 = {{data[value] && data[value].precision}} %
 
   v-card.mt-5
-    p
-        strong Hasil Recall dari RAK A adalah : 
-    p {{this.a && this.a.count}} / {{this.a && this.a.produts}} * 100 = {{this.a && this.a.recall}} %
-    p 
-        strong Hasil Recall dari RAK B adalah : 
-    p {{this.b && this.b.count}} / {{this.b && this.b.produts}} * 100 = {{this.b && this.b.recall}} %
-    p     
-        strong Hasil Recall dari RAK C adalah :
-    p {{this.c && this.c.count}} / {{this.c && this.c.produts}} * 100 = {{this.c && this.c.recall}} %
-    p     
-        strong Hasil Recall dari RAK D adalah :
-    p {{this.d && this.d.count}} / {{this.d && this.d.produts}} * 100 = {{this.d && this.d.recall}} %
-
+    v-ul(v-for="(value,  index) in (Object.keys(data))" :key="index" ) 
+      v-li
+        p 
+          strong Hasil Recall dari {{value}} adalah : 
+        p {{data[value].count}} / {{ data[value].productSearchCount}} * 100 = {{ data[value].recall}} %
   v-card.mt-5
-    p
-        strong Hasil Akurasi dari RAK A adalah : 
-    p {{this.a && this.a.count}} + {{this.a && this.b && this.c && this.d && (this.a.akurasi+this.b.akurasi+this.c.akurasi+this.d.akurasi)}} / {{this.items.length}} * 100 = {{this.a && this.b && this.c && this.d && (this.a.count+(this.a.akurasi+this.b.akurasi+this.c.akurasi+this.d.akurasi)/this.items.length*100)}} %
-    p 
-        strong Hasil Akurasi dari RAK B adalah : 
-    p {{this.b && this.b.count}} + {{this.a && this.b && this.c && this.d && (this.a.akurasi+this.b.akurasi+this.c.akurasi+this.d.akurasi)}} / {{this.items.length}} * 100 = {{this.a && this.b && this.c && this.d && (this.b.count+(this.a.akurasi+this.b.akurasi+this.c.akurasi+this.d.akurasi)/this.items.length*100)}} %
-    p     
-        strong Hasil Akurasi dari RAK C adalah :
-    p {{this.c && this.c.count}} + {{this.a && this.b && this.c && this.d && (this.a.akurasi+this.b.akurasi+this.c.akurasi+this.d.akurasi)}} / {{this.items.length}} * 100 = {{this.a && this.b && this.c && this.d && (this.c.count+(this.a.akurasi+this.b.akurasi+this.c.akurasi+this.d.akurasi)/this.items.length*100)}} %
-    p     
-        strong Hasil Akurasi dari RAK D adalah :
-    p {{this.d && this.d.count}} + {{this.a && this.b && this.c && this.d && (this.a.akurasi+this.b.akurasi+this.c.akurasi+this.d.akurasi)}} / {{this.items.length}} * 100 = {{this.a && this.b && this.c && this.d && (this.d.count+(this.a.akurasi+this.b.akurasi+this.c.akurasi+this.d.akurasi)/this.items.length*100)}} %
+    v-ul(v-for="(value,  index) in (Object.keys(data))" :key="index" )
+      v-li
+        p 
+          strong Hasil Akurasi dari {{value}} adalah : 
+        
+        p {{`${data[value].count}`==='0'? 0 :`(${data[value].count} + ${totalAkurasi}) / ${items.length} * 100 = ${(data[value].count+ totalAkurasi)/items.length*100}`}} %
+
+
 </template>
 
 
@@ -105,6 +152,8 @@ export default {
       c:null,
       d:null,
       e:null,
+      data:[],
+      totalAkurasi:0,
     }
   },  
   computed: {
@@ -127,6 +176,7 @@ export default {
             name: this.searchValue,
         }).then((response) => {
             if(response.data){
+              console.info(response.data)
               this.a = response.data
             }
         });
@@ -155,6 +205,26 @@ export default {
         }).then((response) => {
             if(response.data){
               this.d = response.data
+            }
+        });
+      
+      await Axios.post(
+          `http://localhost:5000/api/presicions`,{
+            name: this.searchValue,
+        }).then((response) => {
+            if(response.data){
+              const tmp = response.data.data
+              let total = 0;
+              for (const key in tmp) {
+                if (Object.hasOwnProperty.call(tmp, key)) {
+                  const element = tmp[key];
+                  console.info(element)
+                  total +=element.akurasi
+                }
+              }
+              this.totalAkurasi = total;
+              this.data= response.data.data;
+              console.info(this.data)
             }
         });
        
