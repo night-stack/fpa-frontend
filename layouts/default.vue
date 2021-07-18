@@ -118,10 +118,14 @@ export default {
           to: '/data-karyawan',
           title: 'DATA KARYAWAN',
         },
-         {
-           to: '/algo',
-           title: 'ALGO',
-         },
+        {
+          to: '/algo',
+          title: 'ALGO',
+        },
+        {
+          to:'/register',
+          title:'REGISTER',
+        },
       ],
       miniVariant: false,
       right: true,

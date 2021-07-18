@@ -171,42 +171,7 @@ export default {
     },
     async goToAddProduct(){
       // modal tambah produk
-      await Axios.post(
-          `http://localhost:5000/api/presicion/rak-a`,{
-            name: this.searchValue,
-        }).then((response) => {
-            if(response.data){
-              console.info(response.data)
-              this.a = response.data
-            }
-        });
-
-      await Axios.post(
-          `http://localhost:5000/api/presicion/rak-b`,{
-            name: this.searchValue,
-        }).then((response) => {
-            if(response.data){
-              this.b = response.data
-            }
-        });
-
-       await Axios.post(
-          `http://localhost:5000/api/presicion/rak-c`,{
-            name: this.searchValue,
-        }).then((response) => {
-            if(response.data){
-              this.c = response.data
-            }
-        });
-
-      await Axios.post(
-          `http://localhost:5000/api/presicion/rak-d`,{
-            name: this.searchValue,
-        }).then((response) => {
-            if(response.data){
-              this.d = response.data
-            }
-        });
+      
       
       await Axios.post(
           `http://localhost:5000/api/presicions`,{
